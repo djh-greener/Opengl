@@ -12,6 +12,8 @@ class IndexBuffer;
 class Texture;
 class Shader;
 
+extern unsigned int SCR_WIDTH;
+extern unsigned int SCR_HEIGHT;
 namespace test {
 	
 	class TestLightColor:public Test
@@ -24,10 +26,6 @@ namespace test {
 		void OnImGuiRender()override;
 
 	private:
-		//Õ®”√
-		unsigned int SCR_WIDTH = 1000;
-		unsigned int SCR_HEIGHT = 1000;
-
 		std::vector<Object*>m_objects;
 		
 		//Ãÿ ‚

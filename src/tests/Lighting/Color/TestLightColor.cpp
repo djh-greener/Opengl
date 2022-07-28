@@ -1,5 +1,6 @@
 #include "TestLightColor.h"
-
+#include<GL/glew.h>
+#include"GLFW/glfw3.h"
 #include<vector>
 
 #include"imgui/imgui.h"
@@ -152,7 +153,11 @@ namespace test {
 			delete it;
 	}
 
-	void TestLightColor::OnUpdate(float deltaTime) {}
+	void TestLightColor::OnUpdate(float deltaTime) {
+		lightColor.x = sin(glfwGetTime() * 2.0f);
+		lightColor.y = sin(glfwGetTime() * 0.7f);
+		lightColor.z = sin(glfwGetTime() * 1.3f);
+	}
 
 	void TestLightColor::OnRender()
 	{
@@ -169,7 +174,7 @@ namespace test {
 			glm::mat4 m_Model = glm::translate(glm::mat4(1), it.pos);
 			it.shader->SetUniformMat4f("u_model", m_Model);
 
-			it.shader->SetUniformMat3f("NormalMat", glm::transpose(glm::inverse(glm::mat3(m_View * m_Model))));
+			it.shader->SetUniformMat3f("NormalMat", glm::mat3(glm::transpose(glm::inverse(m_View * m_Model))));
 
 			it.shader->SetUniform3f("material.ambient", glm::vec3(1.0f, 0.5f, 0.31f));
 			it.shader->SetUniform3f("material.diffuse", glm::vec3(1.0f, 0.5f, 0.71f));
@@ -177,7 +182,7 @@ namespace test {
 			it.shader->SetUniform1f("material.shininess", 32.0f);
 
 			it.shader->SetUniform3f("lightColor", lightColor);
-			it.shader->SetUniform3f("lightPos", it.pos);
+			it.shader->SetUniform3f("lightPos", m_objects[1]->pos);
 			GLCall(glDrawArrays(GL_TRIANGLES, 0, 36));
 		}
 

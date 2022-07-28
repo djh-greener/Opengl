@@ -21,13 +21,16 @@
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 
-unsigned int SCR_WIDTH = 800;
-unsigned int SCR_HEIGHT = 600;
+unsigned int SCR_WIDTH = 1000;
+unsigned int SCR_HEIGHT = 1000;
 
 float lastX;
 float lastY;
 float deltaTime = 0;
 float lastFrame = 0;
+
+
+test::Test* currentTest = nullptr;
 int main(void)
 {
 	GLFWwindow* window;
@@ -43,19 +46,21 @@ int main(void)
 		glfwMakeContextCurrent(window);
 		glewInit();
 		glfwSwapInterval(1);
-		glEnable(GL_DEPTH_TEST);
-
-
+		GLCall(glEnable(GL_DEPTH_TEST));
 		GLCall(glEnable(GL_BLEND));
 		GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+
 		glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+		//glfwSetInputMode(window, GLFW_CURSOR,GLFW_CURSOR_NORMAL);
+		
+		glfwSetCursorPosCallback(window, mouse_callback);
 	}
 
 	ImGui::CreateContext();
 	ImGui_ImplGlfwGL3_Init(window, true);
 	ImGui::StyleColorsDark();
 
-	test::Test* currentTest = nullptr;
+	
 	test::TestMenu* testMenu = new test::TestMenu(currentTest);
 	currentTest = testMenu;
 
@@ -113,6 +118,10 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 	SCR_WIDTH = width;
 	SCR_HEIGHT = height;
 	glViewport(0, 0, width, height);
+
+	if (auto it = dynamic_cast<test::TestLightColor*>(currentTest)) {
+		it->m_Proj = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+	}
 }
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
@@ -121,5 +130,6 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 	float yoffset = lastY - ypos; // 注意这里是相反的，因为y坐标是从底部往顶部依次增大的
 	lastX = xpos;
 	lastY = ypos;
-	Camera::GetInstance()->ProcessMouseMovement(xoffset, yoffset);
+	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS) 
+		Camera::GetInstance()->ProcessMouseMovement(xoffset, yoffset);
 }
