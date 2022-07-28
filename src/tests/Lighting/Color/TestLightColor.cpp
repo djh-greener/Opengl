@@ -1,4 +1,7 @@
 #include "TestLightColor.h"
+
+#include<vector>
+
 #include"imgui/imgui.h"
 
 #include "VertexArray.h"
@@ -8,8 +11,9 @@
 #include "Texture.h"
 #include "Shader.h"
 
+
 #include"myDebug.h"
-#include "Renderer.h"
+
 namespace test {
 	TestLightColor::TestLightColor():
 		m_Proj(glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f)),
@@ -118,6 +122,7 @@ namespace test {
 		obj->vertexBufferLayout->Push<float>(3);
 		obj->vertexArray=new VertexArray;
 		obj->vertexArray->AddBuffer(*obj->vertexBuffer, *obj->vertexBufferLayout);
+		obj->pos = { 0,0,0 };
 		m_objects.push_back(obj);
 
 		Object* light = new Object;
@@ -127,6 +132,7 @@ namespace test {
 		light->vertexBufferLayout->Push<float>(3);
 		light->vertexArray = new VertexArray;
 		light->vertexArray->AddBuffer(*light->vertexBuffer, *light->vertexBufferLayout);
+		light->pos = { 1,2,-2 };
 		m_objects.push_back(light);
 
 		Object* axis = new Object;
@@ -136,6 +142,7 @@ namespace test {
 		axis->vertexBufferLayout->Push<float>(3);
 		axis->vertexArray = new VertexArray;
 		axis->vertexArray->AddBuffer(*axis->vertexBuffer, *axis->vertexBufferLayout);
+		axis->pos = { 0,0,0 };
 		m_objects.push_back(axis);
 	}
 
@@ -152,11 +159,9 @@ namespace test {
 		GLCall(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
 		GLCall(glClear(GL_COLOR_BUFFER_BIT));
 
-		Renderer renderer;
-		//obj
-		{
+		{//物体
 			auto it=*m_objects[0];
-			//it.vertexArray->Bind();
+			it.vertexArray->Bind();
 			it.shader->Bind();
 
 			it.shader->SetUniformMat4f("u_projection", m_Proj);
@@ -172,10 +177,41 @@ namespace test {
 			it.shader->SetUniform1f("material.shininess", 32.0f);
 
 			it.shader->SetUniform3f("lightColor", lightColor);
-			it.shader->SetUniform3f("lightPos", lightPos);
+			it.shader->SetUniform3f("lightPos", it.pos);
+			GLCall(glDrawArrays(GL_TRIANGLES, 0, 36));
 		}
 
-	
+		{//光源
+			auto it = *m_objects[1];
+			it.vertexArray->Bind();
+			it.shader->Bind();
+
+			it.shader->SetUniformMat4f("u_projection", m_Proj);
+			it.shader->SetUniformMat4f("u_view", m_View);
+			glm::mat4 m_Model = glm::translate(glm::mat4(1), it.pos);
+			it.shader->SetUniformMat4f("u_model", m_Model);
+
+			it.shader->SetUniform3f("lightColor", lightColor);
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+
+		}
+		{//坐标轴
+			auto it = *m_objects[2];
+			it.vertexArray->Bind();
+			it.shader->Bind();
+
+			it.shader->SetUniformMat4f("u_projection", m_Proj);
+			it.shader->SetUniformMat4f("u_view", m_View);
+			glm::mat4 m_Model = glm::translate(glm::mat4(1), it.pos);
+			it.shader->SetUniformMat4f("u_model", m_Model);
+
+			for (int i = 0; i < 3; i++) {
+				glm::vec3 tmp = { 0,0,0 };
+				tmp[i] = 1;
+				it.shader->SetUniform3f("objectColor", tmp);
+				glDrawArrays(GL_LINES, 2 * i, 2);
+			}
+		}
 	}
 	void TestLightColor::OnImGuiRender()
 	{

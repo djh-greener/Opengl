@@ -4,9 +4,11 @@
 
 #include"myDebug.h"
 
-#include"tests/Samples/TestClearColor.h"
+#include"tests/Lighting/Color/TestLightColor.h"
 #include"tests/Samples/TestTexture2D.h"
+#include"tests/Samples/TestClearColor.h"
 #include"tests/Test.h"
+
 #include"Camera.h"
 
 #include"glm/glm.hpp"
@@ -24,7 +26,8 @@ unsigned int SCR_HEIGHT = 600;
 
 float lastX;
 float lastY;
-
+float deltaTime = 0;
+float lastFrame = 0;
 int main(void)
 {
 	GLFWwindow* window;
@@ -58,12 +61,21 @@ int main(void)
 
 	testMenu->RegisterTest<test::TestClearColor>("Clear Color");
 	testMenu->RegisterTest<test::TestTexture2D>("2D Texture");
+	testMenu->RegisterTest<test::TestLightColor>("Light Color");
 
 	while (!glfwWindowShouldClose(window))
 	{
 		GLCall(glClearColor(0, 0, 0, 1));
 		GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
-		
+
+		if (auto it = dynamic_cast<test::TestLightColor*>(currentTest)) {
+			float currentFrame = static_cast<float>(glfwGetTime());
+			deltaTime = currentFrame - lastFrame;
+			lastFrame = currentFrame;
+			Camera::GetInstance()->ProcessKeyboard(window, deltaTime);
+			it->m_View = Camera::GetInstance()->GetViewMatrix();
+		}
+
 		ImGui_ImplGlfwGL3_NewFrame();
 
 		if (currentTest) {

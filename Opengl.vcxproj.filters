@@ -66,9 +66,6 @@
     <ClCompile Include="src\tests\Lighting\Color\TestLightColor.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="src\Lighting.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\Basic.shader" />
