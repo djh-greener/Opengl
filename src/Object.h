@@ -1,6 +1,8 @@
 #pragma once
 #include "glm/glm.hpp"
 
+#include<vector>
+
 class VertexArray;
 class IndexBuffer;
 class VertexBuffer;
@@ -16,8 +18,9 @@ namespace test {
 		VertexBuffer* vertexBuffer;
 		VertexBufferLayout* vertexBufferLayout;
 		Shader* shader;
-		Texture* texture;
+		std::vector<Texture*> textures;
 
 		glm::vec3 pos = { 0,0,0 };
+
 	};
 }

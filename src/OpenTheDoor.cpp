@@ -5,8 +5,7 @@
 #include"myDebug.h"
 
 #include"tests/Lighting/Color/TestLightColor.h"
-#include"tests/Samples/TestTexture2D.h"
-#include"tests/Samples/TestClearColor.h"
+#include"tests/Lighting/Map/TestLightMap.h"
 #include"tests/Test.h"
 
 #include"Camera.h"
@@ -51,7 +50,7 @@ int main(void)
 		GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 
 		glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-		//glfwSetInputMode(window, GLFW_CURSOR,GLFW_CURSOR_NORMAL);
+		glfwSetInputMode(window, GLFW_CURSOR,GLFW_CURSOR_NORMAL);
 		
 		glfwSetCursorPosCallback(window, mouse_callback);
 	}
@@ -60,20 +59,18 @@ int main(void)
 	ImGui_ImplGlfwGL3_Init(window, true);
 	ImGui::StyleColorsDark();
 
-	
 	test::TestMenu* testMenu = new test::TestMenu(currentTest);
 	currentTest = testMenu;
 
-	testMenu->RegisterTest<test::TestClearColor>("Clear Color");
-	testMenu->RegisterTest<test::TestTexture2D>("2D Texture");
-	testMenu->RegisterTest<test::TestLightColor>("Light Color");
+	testMenu->RegisterTest<test::TestLightColor>("Light Color"); 
+	testMenu->RegisterTest<test::TestLightMap>("Light Map");
 
 	while (!glfwWindowShouldClose(window))
 	{
 		GLCall(glClearColor(0, 0, 0, 1));
 		GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
-
-		if (auto it = dynamic_cast<test::TestLightColor*>(currentTest)) {
+		
+		if (auto it = dynamic_cast<test::TestNormal*>(currentTest)) {
 			float currentFrame = static_cast<float>(glfwGetTime());
 			deltaTime = currentFrame - lastFrame;
 			lastFrame = currentFrame;
@@ -83,11 +80,12 @@ int main(void)
 
 		ImGui_ImplGlfwGL3_NewFrame();
 
+		
 		if (currentTest) {
-			currentTest->OnUpdate(0.0F);
+			currentTest->OnUpdate(deltaTime);
 			currentTest->OnRender();
 			ImGui::Begin("Test");
-			if (currentTest != testMenu && ImGui::Button("<-")) {
+			if (ImGui::Button("<-") && currentTest != testMenu) {
 				delete currentTest;
 				currentTest = testMenu;
 			}
@@ -119,7 +117,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 	SCR_HEIGHT = height;
 	glViewport(0, 0, width, height);
 
-	if (auto it = dynamic_cast<test::TestLightColor*>(currentTest)) {
+	if (auto it = dynamic_cast<test::TestNormal*>(currentTest)) {
 		it->m_Proj = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 	}
 }

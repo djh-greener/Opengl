@@ -51,19 +51,16 @@
     <ClCompile Include="src\Renderer.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="src\tests\Samples\TestClearColor.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="src\tests\Test.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="src\tests\Samples\TestTexture2D.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="src\OpenTheDoor.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="src\tests\Lighting\Color\TestLightColor.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\tests\Lighting\Map\TestLightMap.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -481,6 +478,7 @@
     <None Include="res\shaders\obj.shader" />
     <None Include="res\shaders\axis.shader" />
     <None Include="imgui.ini" />
+    <None Include="res\shaders\lightmap.shader" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\VertexBuffer.h">
@@ -1383,16 +1381,13 @@
     <ClInclude Include="src\tests\Test.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="src\tests\Samples\TestClearColor.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="src\tests\Samples\TestTexture2D.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="src\tests\Lighting\Color\TestLightColor.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="src\Object.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tests\Lighting\Map\TestLightMap.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1409,22 +1404,13 @@
     <Image Include="res\textures\P4.jpg">
       <Filter>资源文件</Filter>
     </Image>
-    <Image Include="res\textures\1.jpg">
+    <Image Include="res\textures\container2.png">
       <Filter>资源文件</Filter>
     </Image>
-    <Image Include="res\textures\2.jpg">
+    <Image Include="res\textures\container2_specular.png">
       <Filter>资源文件</Filter>
     </Image>
-    <Image Include="res\textures\3.jpg">
-      <Filter>资源文件</Filter>
-    </Image>
-    <Image Include="res\textures\4.jpg">
-      <Filter>资源文件</Filter>
-    </Image>
-    <Image Include="res\textures\5.jpg">
-      <Filter>资源文件</Filter>
-    </Image>
-    <Image Include="res\textures\6.jpg">
+    <Image Include="res\textures\matrix.jpg">
       <Filter>资源文件</Filter>
     </Image>
   </ItemGroup>

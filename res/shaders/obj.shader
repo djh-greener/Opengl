@@ -6,7 +6,7 @@ layout (location = 1) in vec3 aNormal;
 uniform mat4 u_model;
 uniform mat4 u_view;
 uniform mat4 u_projection;
-uniform mat3 NormalMat;
+uniform mat3 NormalMat;//移除对法向量错误缩放的影响
 
 uniform vec3 lightPos;
 
@@ -15,28 +15,31 @@ out vec3 Normal;
 out vec3 LightPos;
 void main()
 {
-    gl_Position = u_projection * u_view * u_model * vec4(aPos, 1.0);
-	FragPos = vec3(u_view*u_model * vec4(aPos, 1.0));
+    gl_Position = u_projection * u_view * u_model * vec4(aPos, 1.0);//裁剪空间坐标,之后自动进行透视除法
+	FragPos = vec3(u_view*u_model * vec4(aPos, 1.0));//观察空间
     Normal = NormalMat*aNormal;
 	LightPos=vec3(u_view * vec4(lightPos, 1.0));
 }
 
 #shader fragment
 #version 330 core
+
 in vec3 Normal;
 in vec3 FragPos;
 in vec3 LightPos;
 
 out vec4 FragColor;
 struct Material {
-    vec3 ambient;
-    vec3 diffuse;
-    vec3 specular;
-    float shininess;
+	vec3		ambient;
+    vec3		diffuse;
+    vec3     specular;
+    float     shininess;
 }; 
+
 
 uniform Material material;
 uniform vec3 lightColor;
+
 void main()
 {
     float ambientStrength = 0.2;

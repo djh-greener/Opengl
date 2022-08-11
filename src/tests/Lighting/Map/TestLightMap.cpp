@@ -1,4 +1,4 @@
-#include "TestLightColor.h"
+#include "TestLightMap.h"
 #include<GL/glew.h>
 #include"GLFW/glfw3.h"
 #include<vector>
@@ -9,13 +9,58 @@
 #include "VertexBuffer.h"
 #include "VertexBufferLayout.h"
 #include "IndexBuffer.h"
+#include "Texture.h"
 #include "Shader.h"
 
 #include"myDebug.h"
 
 namespace test {
-	TestLightColor::TestLightColor():TestNormal()
+	TestLightMap::TestLightMap() :TestNormal()
 	{
+		float objvertices[] = {
+			// positions          // normals           // texture coords
+			 -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
+			  0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 0.0f,
+			  0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 1.0f,
+			  0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 1.0f,
+			 -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 1.0f,
+			 -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
+			
+			 -0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   0.0f, 0.0f,
+			  0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   1.0f, 0.0f,
+			  0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   1.0f, 1.0f,
+			  0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   1.0f, 1.0f,
+			 -0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   0.0f, 1.0f,
+			 -0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,   0.0f, 0.0f,
+			
+			 -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+			 -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 1.0f,
+			 -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+			 -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+			 -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 0.0f,
+			 -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+			
+			  0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+			  0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f,
+			  0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+			  0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+			  0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 0.0f,
+			  0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+			
+			 -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 1.0f,
+			  0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 1.0f,
+			  0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 0.0f,
+			  0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 0.0f,
+			 -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 0.0f,
+			 -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 1.0f,
+			
+			 -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f,
+			  0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 1.0f,
+			  0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
+			  0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
+			 -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 0.0f,
+			 -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f
+		};
 		float lightvertices[] = {
 -0.5f, -0.5f, -0.5f,
  0.5f, -0.5f, -0.5f,
@@ -59,49 +104,7 @@ namespace test {
 -0.5f,  0.5f,  0.5f,
 -0.5f,  0.5f, -0.5f
 		};
-		float objvertices[] = {
-			-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-			 0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-			 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-			 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-			-0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-			-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-
-			-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-			 0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-			 0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-			 0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-			-0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-			-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-
-			-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-			-0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-			-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-			-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-			-0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-			-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-
-			 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-			 0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-			 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-			 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-			 0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-			 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-
-			-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-			 0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-			 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-			 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-			-0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-			-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-
-			-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-			 0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-			 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-			 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-			-0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-			-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
-		};
+		
 		float axisVectices[] = {
 			0.0f,0.0f,0.0f,
 			10.f,0.f,0.f,
@@ -112,13 +115,19 @@ namespace test {
 		};
 
 		Object* obj = new Object;
-		obj->shader=new Shader("res/shaders/obj.shader");
-		obj->vertexBuffer=new VertexBuffer (objvertices, sizeof(objvertices));
-		obj->vertexBufferLayout=new VertexBufferLayout;
-		obj->vertexBufferLayout->Push<float>(3);
-		obj->vertexBufferLayout->Push<float>(3);
-		obj->vertexArray=new VertexArray;
+		obj->shader = new Shader("res/shaders/lightmap.shader");
+		obj->vertexBuffer = new VertexBuffer(objvertices, sizeof(objvertices));
+		obj->vertexBufferLayout = new VertexBufferLayout;
+		obj->vertexBufferLayout->Push<float>(3);// positions
+		obj->vertexBufferLayout->Push<float>(3);// normals
+		obj->vertexBufferLayout->Push<float>(2);// texture coords
+		obj->vertexArray = new VertexArray;
 		obj->vertexArray->AddBuffer(*obj->vertexBuffer, *obj->vertexBufferLayout);
+		obj->textures.push_back(new Texture("res/textures/container2.png"));
+		obj->textures.push_back(new Texture("res/textures/container2_specular.png"));
+		obj->textures.push_back(new Texture("res/textures/matrix.jpg"));
+		for (int i = 0; i < obj->textures.size();i++)
+			obj->textures[i]->Bind(i);
 		obj->pos = { 0,0,0 };
 		m_objects.push_back(obj);
 
@@ -143,23 +152,28 @@ namespace test {
 		m_objects.push_back(axis);
 	}
 
-	TestLightColor::~TestLightColor()
+	TestLightMap::~TestLightMap()
 	{
 		for (auto it : m_objects)
 			delete it;
 	}
 
-	void TestLightColor::OnUpdate(float deltaTime) {
+	void TestLightMap::OnUpdate(float deltaTime) {
+		auto it = m_objects[0];
 		
+		if (time < 1)time += deltaTime/2;
+		else time = 0;
+		it->shader->Bind();
+		it->shader->SetUniform1f("time", time);
 	}
 
-	void TestLightColor::OnRender()
+	void TestLightMap::OnRender()
 	{
 		GLCall(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
 		GLCall(glClear(GL_COLOR_BUFFER_BIT));
-
+		
 		{//ÎïÌå
-			auto it=*m_objects[0];
+			auto it = *m_objects[0];
 			it.vertexArray->Bind();
 			it.shader->Bind();
 
@@ -170,9 +184,9 @@ namespace test {
 
 			it.shader->SetUniformMat3f("NormalMat", glm::mat3(glm::transpose(glm::inverse(m_View * m_Model))));
 
-			it.shader->SetUniform3f("material.ambient", glm::vec3(1.0f, 0.5f, 0.31f));
-			it.shader->SetUniform3f("material.diffuse", glm::vec3(1.0f, 0.5f, 0.71f));
-			it.shader->SetUniform3f("material.specular", glm::vec3(0.5f, 0.5f, 0.5f));
+			it.shader->SetUniform1i("material.diffuse", 0);
+			it.shader->SetUniform1i("material.specular", 1);
+			it.shader->SetUniform1i("material.text", 2);
 			it.shader->SetUniform1f("material.shininess", 32.0f);
 
 			it.shader->SetUniform3f("lightColor", lightColor);
@@ -212,7 +226,8 @@ namespace test {
 			}
 		}
 	}
-	void TestLightColor::OnImGuiRender()
+
+	void TestLightMap::OnImGuiRender()
 	{
 		ImGui::SliderFloat3("ObjPos", &m_objects[0]->pos.x, -5, 5);
 		ImGui::SliderFloat3("LightPos", &m_objects[1]->pos.x, -5, 5);
