@@ -1,7 +1,7 @@
 #pragma once
 #include<functional>
 #include<iostream>
-#include"Object.h"
+#include"tools/Object.h"
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 

@@ -2,13 +2,13 @@
 #include <GLFW/glfw3.h>
 #include<vector>
 
-#include"myDebug.h"
+#include"tools/myDebug.h"
 
 #include"tests/Lighting/Color/TestLightColor.h"
 #include"tests/Lighting/Map/TestLightMap.h"
-#include"tests/Test.h"
+#include"tests/Lighting/Caster/TestLightCaster.h"
 
-#include"Camera.h"
+#include"tools/Camera.h"
 
 #include"glm/glm.hpp"
 #include"glm/gtc/matrix_transform.hpp"
@@ -63,8 +63,8 @@ int main(void)
 	currentTest = testMenu;
 
 	testMenu->RegisterTest<test::TestLightColor>("Light Color"); 
-	testMenu->RegisterTest<test::TestLightMap>("Light Map");
-
+	testMenu->RegisterTest<test::TestLightMap>("Light Map"); 
+	testMenu->RegisterTest<test::TestLightCaster>("Light Caster");
 	while (!glfwWindowShouldClose(window))
 	{
 		GLCall(glClearColor(0, 0, 0, 1));
@@ -117,9 +117,9 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 	SCR_HEIGHT = height;
 	glViewport(0, 0, width, height);
 
-	if (auto it = dynamic_cast<test::TestNormal*>(currentTest)) {
+	if (auto it = dynamic_cast<test::TestNormal*>(currentTest)) 
 		it->m_Proj = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-	}
+	
 }
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)

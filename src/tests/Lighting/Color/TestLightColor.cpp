@@ -5,13 +5,13 @@
 
 #include"imgui/imgui.h"
 
-#include "VertexArray.h"
-#include "VertexBuffer.h"
-#include "VertexBufferLayout.h"
-#include "IndexBuffer.h"
-#include "Shader.h"
+#include "tools/VertexArray.h"
+#include "tools/VertexBuffer.h"
+#include "tools/VertexBufferLayout.h"
+#include "tools/IndexBuffer.h"
+#include "tools/Shader.h"
 
-#include"myDebug.h"
+#include"tools/myDebug.h"
 
 namespace test {
 	TestLightColor::TestLightColor():TestNormal()
